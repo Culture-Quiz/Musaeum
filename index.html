@@ -1,0 +1,1398 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Musaeum — Découverte & Révision des Œuvres d'Art</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --cream: #F7F3EE;
+    --warm-white: #FDFAF7;
+    --parchment: #EDE8E0;
+    --sand: #D9D0C3;
+    --taupe: #B8AC9C;
+    --charcoal: #2C2825;
+    --ink: #1A1714;
+    --accent: #8B6F47;
+    --accent-light: #C4A882;
+    --accent-muted: #D4C4B0;
+    --gold: #B8962E;
+    --gold-light: #D4B54A;
+    --red-muted: #A85444;
+    --text-primary: #2C2825;
+    --text-secondary: #6B6259;
+    --text-tertiary: #9C9188;
+    --border: #E0D8CE;
+    --shadow: rgba(44,40,37,0.08);
+    --shadow-md: rgba(44,40,37,0.14);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Jost', sans-serif;
+    background: var(--cream);
+    color: var(--text-primary);
+    min-height: 100vh;
+    font-weight: 300;
+    letter-spacing: 0.01em;
+  }
+
+  /* ── GRAIN OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.4;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--warm-white);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(12px);
+  }
+
+  .header-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+  }
+
+  .logo {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .logo-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: var(--ink);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .logo-sub {
+    font-size: 0.65rem;
+    font-weight: 400;
+    color: var(--text-tertiary);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  nav {
+    display: flex;
+    gap: 0.25rem;
+  }
+
+  .nav-btn {
+    background: none;
+    border: none;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all 0.2s;
+    position: relative;
+  }
+
+  .nav-btn::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 1px;
+    background: var(--accent);
+    transition: width 0.25s;
+  }
+
+  .nav-btn:hover { color: var(--text-primary); }
+  .nav-btn:hover::after { width: 60%; }
+
+  .nav-btn.active {
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  .nav-btn.active::after { width: 60%; }
+
+  /* ── MAIN LAYOUT ── */
+  main { max-width: 1200px; margin: 0 auto; padding: 3rem 2rem; }
+
+  /* ── SECTION TITLE ── */
+  .section-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.4rem;
+    font-weight: 400;
+    color: var(--ink);
+    line-height: 1;
+  }
+
+  .section-subtitle {
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    margin-top: 0.4rem;
+  }
+
+  /* ── FILTERS ── */
+  .filters {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+  }
+
+  .filter-btn {
+    background: var(--warm-white);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 0.4rem 1rem;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .filter-btn:hover {
+    border-color: var(--accent-light);
+    color: var(--accent);
+  }
+
+  .filter-btn.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+    font-weight: 500;
+  }
+
+  /* ── CARDS GRID ── */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .artwork-card {
+    background: var(--warm-white);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.3s cubic-bezier(0.25,0.46,0.45,0.94), box-shadow 0.3s;
+    animation: fadeUp 0.4s ease both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .artwork-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px var(--shadow-md);
+  }
+
+  .card-img-wrap {
+    aspect-ratio: 4/3;
+    overflow: hidden;
+    background: var(--parchment);
+    position: relative;
+  }
+
+  .card-img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s cubic-bezier(0.25,0.46,0.45,0.94);
+    display: block;
+  }
+
+  .artwork-card:hover .card-img-wrap img {
+    transform: scale(1.04);
+  }
+
+  .card-movement-badge {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    background: rgba(253,250,247,0.92);
+    backdrop-filter: blur(4px);
+    border: 1px solid var(--border);
+    padding: 0.2rem 0.6rem;
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    border-radius: 2px;
+  }
+
+  .card-body {
+    padding: 1.25rem 1.25rem 1rem;
+  }
+
+  .card-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.15rem;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 0.2rem;
+    line-height: 1.3;
+  }
+
+  .card-author {
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.75rem;
+  }
+
+  .card-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .card-date {
+    font-size: 0.7rem;
+    color: var(--text-tertiary);
+    letter-spacing: 0.05em;
+  }
+
+  .stars {
+    display: flex;
+    gap: 2px;
+  }
+
+  .star {
+    font-size: 0.75rem;
+    color: var(--sand);
+    transition: color 0.2s;
+  }
+
+  .star.filled { color: var(--gold); }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(26,23,20,0.7);
+    backdrop-filter: blur(4px);
+    z-index: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+  }
+
+  .modal-overlay.visible {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .modal {
+    background: var(--warm-white);
+    border-radius: 4px;
+    max-width: 860px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.3);
+    transform: translateY(20px) scale(0.97);
+    transition: transform 0.3s cubic-bezier(0.25,0.46,0.45,0.94);
+  }
+
+  .modal-overlay.visible .modal {
+    transform: translateY(0) scale(1);
+  }
+
+  .modal-img-side {
+    position: relative;
+    background: var(--parchment);
+  }
+
+  .modal-img-side img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    min-height: 400px;
+  }
+
+  .modal-content-side {
+    padding: 2.5rem 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: rgba(253,250,247,0.9);
+    border: 1px solid var(--border);
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1rem;
+    color: var(--text-secondary);
+    transition: all 0.2s;
+    z-index: 10;
+  }
+
+  .modal-close:hover { background: white; color: var(--ink); }
+
+  .modal-movement {
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  .modal-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.9rem;
+    font-weight: 400;
+    line-height: 1.2;
+    color: var(--ink);
+  }
+
+  .modal-author {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+  }
+
+  .modal-author span { font-style: italic; }
+
+  .modal-divider {
+    height: 1px;
+    background: var(--border);
+  }
+
+  .modal-analyse {
+    font-size: 0.85rem;
+    line-height: 1.8;
+    color: var(--text-secondary);
+    flex: 1;
+  }
+
+  .modal-mastery {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .modal-mastery-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+  }
+
+  .modal-stars { display: flex; gap: 3px; }
+  .modal-star { font-size: 1rem; color: var(--sand); }
+  .modal-star.filled { color: var(--gold); }
+
+  /* ── VIEWS ── */
+  .view { display: none; }
+  .view.active { display: block; }
+
+  /* ── FLASHCARD ── */
+  .flashcard-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .fc-progress {
+    font-size: 0.75rem;
+    color: var(--text-tertiary);
+    letter-spacing: 0.08em;
+  }
+
+  .fc-progress strong {
+    color: var(--text-primary);
+    font-weight: 500;
+  }
+
+  .btn {
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 0.6rem 1.5rem;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all 0.2s;
+  }
+
+  .btn:hover { background: var(--charcoal); }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+  }
+
+  .btn-outline:hover { border-color: var(--accent); color: var(--accent); background: transparent; }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--text-tertiary);
+    border: none;
+    padding: 0.5rem 1rem;
+    font-size: 0.75rem;
+  }
+
+  .btn-ghost:hover { color: var(--text-primary); background: transparent; }
+
+  /* ── CARD FLIP ── */
+  .fc-scene {
+    perspective: 1200px;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    aspect-ratio: 3/2;
+    cursor: pointer;
+  }
+
+  .fc-card {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.6s cubic-bezier(0.25,0.46,0.45,0.94);
+  }
+
+  .fc-card.flipped { transform: rotateY(180deg); }
+
+  .fc-face {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 8px 40px var(--shadow-md);
+  }
+
+  .fc-front {
+    background: var(--parchment);
+  }
+
+  .fc-front img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .fc-front-hint {
+    position: absolute;
+    bottom: 1.25rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(253,250,247,0.9);
+    backdrop-filter: blur(4px);
+    border: 1px solid var(--border);
+    padding: 0.4rem 1rem;
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+
+  .fc-back {
+    background: var(--warm-white);
+    transform: rotateY(180deg);
+    display: flex;
+    flex-direction: column;
+    padding: 2rem 2.5rem;
+    justify-content: center;
+    gap: 0.75rem;
+    border: 1px solid var(--border);
+  }
+
+  .fc-back-movement {
+    font-size: 0.62rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  .fc-back-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.8rem;
+    font-weight: 400;
+    color: var(--ink);
+    line-height: 1.2;
+  }
+
+  .fc-back-author {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    font-style: italic;
+  }
+
+  .fc-back-date {
+    font-size: 0.75rem;
+    color: var(--text-tertiary);
+  }
+
+  .fc-back-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 0.25rem 0;
+  }
+
+  .fc-back-analyse {
+    font-size: 0.78rem;
+    line-height: 1.75;
+    color: var(--text-secondary);
+    max-height: 120px;
+    overflow-y: auto;
+  }
+
+  /* ── SCORE INPUT ── */
+  .fc-score-panel {
+    max-width: 600px;
+    margin: 1.5rem auto 0;
+    background: var(--warm-white);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1.5rem 2rem;
+    display: none;
+    animation: fadeUp 0.3s ease;
+  }
+
+  .fc-score-panel.visible { display: block; }
+
+  .fc-score-title {
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    margin-bottom: 1rem;
+  }
+
+  .score-buttons {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .score-btn {
+    flex: 1;
+    padding: 0.75rem;
+    background: var(--cream);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+  }
+
+  .score-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .score-btn.selected {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+  }
+
+  .score-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.62rem;
+    color: var(--text-tertiary);
+    margin-bottom: 1rem;
+    letter-spacing: 0.06em;
+  }
+
+  .fc-nav {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* ── STATS ── */
+  .stats-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+    margin-bottom: 3rem;
+  }
+
+  .stat-card {
+    background: var(--warm-white);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1.5rem;
+    text-align: center;
+    animation: fadeUp 0.4s ease both;
+  }
+
+  .stat-number {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.8rem;
+    font-weight: 400;
+    color: var(--ink);
+    line-height: 1;
+    margin-bottom: 0.4rem;
+  }
+
+  .stat-label {
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+  }
+
+  .stats-section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem;
+    font-weight: 400;
+    color: var(--ink);
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .stats-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 3rem;
+    font-size: 0.85rem;
+  }
+
+  .stats-table th {
+    text-align: left;
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    font-weight: 400;
+    padding: 0.5rem 1rem 0.75rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .stats-table td {
+    padding: 0.85rem 1rem;
+    border-bottom: 1px solid rgba(224,216,206,0.5);
+    color: var(--text-secondary);
+    vertical-align: middle;
+  }
+
+  .stats-table tr:last-child td { border-bottom: none; }
+
+  .stats-table td:first-child {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    color: var(--ink);
+    font-weight: 400;
+  }
+
+  .stats-table tr:hover td { background: rgba(224,216,206,0.2); }
+
+  .movement-bar-wrap {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .movement-bar {
+    flex: 1;
+    height: 4px;
+    background: var(--parchment);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .movement-bar-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 2px;
+    transition: width 0.8s cubic-bezier(0.25,0.46,0.45,0.94);
+  }
+
+  .movement-score {
+    font-size: 0.72rem;
+    color: var(--text-tertiary);
+    min-width: 2.5rem;
+    text-align: right;
+  }
+
+  /* ── EMPTY STATE ── */
+  .empty-state {
+    text-align: center;
+    padding: 5rem 2rem;
+    color: var(--text-tertiary);
+  }
+
+  .empty-state-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    opacity: 0.4;
+  }
+
+  .empty-state p {
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+  }
+
+  /* ── TOAST ── */
+  .toast {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    background: var(--ink);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 3px;
+    font-size: 0.78rem;
+    letter-spacing: 0.05em;
+    z-index: 999;
+    transform: translateY(1rem);
+    opacity: 0;
+    transition: all 0.3s;
+    pointer-events: none;
+  }
+
+  .toast.show { transform: translateY(0); opacity: 1; }
+
+  /* ── RANDOM BTN ── */
+  .shuffle-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 0.4rem 0.9rem;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .shuffle-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  .fc-complete {
+    text-align: center;
+    padding: 4rem 2rem;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  .fc-complete-icon {
+    font-size: 3rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .fc-complete h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2rem;
+    font-weight: 400;
+    color: var(--ink);
+    margin-bottom: 0.5rem;
+  }
+
+  .fc-complete p {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+    line-height: 1.7;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 680px) {
+    .modal { grid-template-columns: 1fr; }
+    .modal-img-side { min-height: 240px; }
+    .modal-img-side img { min-height: 240px; }
+    .fc-back { padding: 1.5rem; }
+    .fc-back-title { font-size: 1.4rem; }
+    .header-inner { padding: 0 1rem; }
+    main { padding: 2rem 1rem; }
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--cream); }
+  ::-webkit-scrollbar-thumb { background: var(--sand); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--taupe); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo" onclick="navigate('explore')">
+      <span class="logo-text">Musaeum</span>
+      <span class="logo-sub">Art &amp; Mémoire</span>
+    </div>
+    <nav>
+      <button class="nav-btn active" data-view="explore" onclick="navigate('explore')">Explorer</button>
+      <button class="nav-btn" data-view="revision" onclick="navigate('revision')">Réviser</button>
+      <button class="nav-btn" data-view="stats" onclick="navigate('stats')">Statistiques</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <!-- ══════════════ EXPLORE VIEW ══════════════ -->
+  <div id="view-explore" class="view active">
+    <div class="section-header">
+      <div>
+        <h1 class="section-title">Collection</h1>
+        <p class="section-subtitle">10 œuvres majeures · 6 mouvements</p>
+      </div>
+      <button class="shuffle-btn" onclick="shuffleCards()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 3 21 3 21 8"></polyline><line x1="4" y1="20" x2="21" y2="3"></line><polyline points="21 16 21 21 16 21"></polyline><line x1="15" y1="15" x2="21" y2="21"></line></svg>
+        Aléatoire
+      </button>
+    </div>
+    <div class="filters" id="filters"></div>
+    <div class="cards-grid" id="cards-grid"></div>
+  </div>
+
+  <!-- ══════════════ REVISION VIEW ══════════════ -->
+  <div id="view-revision" class="view">
+    <div class="section-header">
+      <div>
+        <h1 class="section-title">Révision</h1>
+        <p class="section-subtitle">Flash Cards · Mode Mémoire</p>
+      </div>
+    </div>
+
+    <div id="fc-main">
+      <div class="flashcard-controls">
+        <p class="fc-progress">Carte <strong id="fc-current">1</strong> sur <strong id="fc-total">10</strong></p>
+        <div style="display:flex;gap:0.5rem;">
+          <button class="btn btn-outline" onclick="startRevision()">Recommencer</button>
+        </div>
+      </div>
+
+      <div class="fc-scene" onclick="flipCard()">
+        <div class="fc-card" id="fc-card">
+          <div class="fc-face fc-front">
+            <img id="fc-img" src="" alt="">
+            <div class="fc-front-hint">Cliquer pour révéler</div>
+          </div>
+          <div class="fc-face fc-back">
+            <div class="fc-back-movement" id="fc-back-movement"></div>
+            <div class="fc-back-title" id="fc-back-title"></div>
+            <div class="fc-back-author" id="fc-back-author"></div>
+            <div class="fc-back-date" id="fc-back-date"></div>
+            <div class="fc-back-divider"></div>
+            <div class="fc-back-analyse" id="fc-back-analyse"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="fc-score-panel" id="fc-score-panel">
+        <p class="fc-score-title">Combien de critères avez-vous mémorisé ?</p>
+        <div class="score-buttons" id="score-buttons">
+          <button class="score-btn" onclick="selectScore(0)">0</button>
+          <button class="score-btn" onclick="selectScore(1)">1</button>
+          <button class="score-btn" onclick="selectScore(2)">2</button>
+          <button class="score-btn" onclick="selectScore(3)">3</button>
+        </div>
+        <div class="score-labels">
+          <span>Aucun souvenir</span>
+          <span>Partiel</span>
+          <span>Bon</span>
+          <span>Parfait</span>
+        </div>
+        <button class="btn" id="fc-validate-btn" onclick="validateScore()" disabled>Valider →</button>
+      </div>
+
+      <div class="fc-nav">
+        <button class="btn btn-ghost" onclick="prevCard()">← Précédent</button>
+        <button class="btn btn-ghost" onclick="nextCard()">Suivant →</button>
+      </div>
+    </div>
+
+    <div id="fc-complete" class="fc-complete" style="display:none;">
+      <div class="fc-complete-icon">✦</div>
+      <h2>Révision terminée</h2>
+      <p id="fc-complete-msg">Vous avez parcouru l'ensemble de la collection.<br>Consultez vos statistiques pour voir votre progression.</p>
+      <div style="display:flex;gap:1rem;justify-content:center;">
+        <button class="btn" onclick="startRevision()">Recommencer</button>
+        <button class="btn btn-outline" onclick="navigate('stats')">Voir les stats</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ STATS VIEW ══════════════ -->
+  <div id="view-stats" class="view">
+    <div class="section-header">
+      <div>
+        <h1 class="section-title">Statistiques</h1>
+        <p class="section-subtitle">Votre progression</p>
+      </div>
+      <button class="btn btn-outline" style="font-size:0.68rem;" onclick="resetStats()">Réinitialiser</button>
+    </div>
+
+    <div class="stats-summary" id="stats-summary"></div>
+
+    <h2 class="stats-section-title">Par œuvre</h2>
+    <table class="stats-table">
+      <thead>
+        <tr>
+          <th>Œuvre</th>
+          <th>Artiste</th>
+          <th>Mouvement</th>
+          <th>Maîtrise</th>
+        </tr>
+      </thead>
+      <tbody id="stats-artworks"></tbody>
+    </table>
+
+    <h2 class="stats-section-title">Par mouvement</h2>
+    <table class="stats-table">
+      <thead>
+        <tr>
+          <th>Mouvement</th>
+          <th style="width:60%">Progression</th>
+          <th>Score</th>
+        </tr>
+      </thead>
+      <tbody id="stats-movements"></tbody>
+    </table>
+  </div>
+
+</main>
+
+<!-- ══════════════ MODAL ══════════════ -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+  <div class="modal">
+    <div class="modal-img-side">
+      <button class="modal-close" onclick="closeModal()">✕</button>
+      <img id="modal-img" src="" alt="">
+    </div>
+    <div class="modal-content-side">
+      <div>
+        <p class="modal-movement" id="modal-movement"></p>
+        <h2 class="modal-title" id="modal-title"></h2>
+        <p class="modal-author" id="modal-author"></p>
+      </div>
+      <div class="modal-divider"></div>
+      <p class="modal-analyse" id="modal-analyse"></p>
+      <div class="modal-mastery">
+        <span class="modal-mastery-label">Maîtrise</span>
+        <div class="modal-stars" id="modal-stars"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="data.js"></script>
+<script>
+
+// ══════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════
+let currentView = 'explore';
+let activeFilter = 'all';
+let displayedArtworks = [...ARTWORKS];
+
+// FLASHCARD STATE
+let fcDeck = [];
+let fcIndex = 0;
+let fcFlipped = false;
+let fcSelectedScore = null;
+
+// ══════════════════════════════════════════
+//  LOCALSTORAGE
+// ══════════════════════════════════════════
+function getScores() {
+  return JSON.parse(localStorage.getItem('musaeum_scores') || '{}');
+}
+
+function saveScore(id, score) {
+  const scores = getScores();
+  if (!scores[id]) scores[id] = { total: 0, count: 0 };
+  scores[id].total += score;
+  scores[id].count += 1;
+  localStorage.setItem('musaeum_scores', JSON.stringify(scores));
+}
+
+function getMastery(id) {
+  const scores = getScores();
+  if (!scores[id] || scores[id].count === 0) return 0;
+  const avg = scores[id].total / scores[id].count; // 0-3 scale
+  return Math.min(5, (avg / 3) * 5);
+}
+
+function resetStats() {
+  if (!confirm('Réinitialiser toutes les statistiques ?')) return;
+  localStorage.removeItem('musaeum_scores');
+  renderStats();
+  showToast('Statistiques réinitialisées');
+}
+
+// ══════════════════════════════════════════
+//  NAVIGATION
+// ══════════════════════════════════════════
+function navigate(view) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('view-' + view).classList.add('active');
+  document.querySelector(`[data-view="${view}"]`).classList.add('active');
+  currentView = view;
+  if (view === 'explore') renderCards();
+  if (view === 'revision') initRevision();
+  if (view === 'stats') renderStats();
+}
+
+// ══════════════════════════════════════════
+//  EXPLORE
+// ══════════════════════════════════════════
+function getMovements() {
+  return [...new Set(ARTWORKS.map(a => a.mouvement))].sort();
+}
+
+function renderFilters() {
+  const container = document.getElementById('filters');
+  const movements = getMovements();
+  let html = `<button class="filter-btn ${activeFilter === 'all' ? 'active' : ''}" onclick="filterBy('all')">Tous</button>`;
+  movements.forEach(m => {
+    html += `<button class="filter-btn ${activeFilter === m ? 'active' : ''}" onclick="filterBy('${m}')">${m}</button>`;
+  });
+  container.innerHTML = html;
+}
+
+function filterBy(filter) {
+  activeFilter = filter;
+  displayedArtworks = filter === 'all' ? [...ARTWORKS] : ARTWORKS.filter(a => a.mouvement === filter);
+  renderFilters();
+  renderCards();
+}
+
+function shuffleCards() {
+  displayedArtworks = [...displayedArtworks].sort(() => Math.random() - 0.5);
+  renderCards();
+  showToast('Collection mélangée');
+}
+
+function starsHtml(mastery, size = 'sm') {
+  const cls = size === 'lg' ? 'modal-star' : 'star';
+  let html = '';
+  for (let i = 1; i <= 5; i++) {
+    const filled = i <= Math.round(mastery) ? 'filled' : '';
+    html += `<span class="${cls} ${filled}">★</span>`;
+  }
+  return html;
+}
+
+function renderCards() {
+  renderFilters();
+  const grid = document.getElementById('cards-grid');
+  if (displayedArtworks.length === 0) {
+    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><div class="empty-state-icon">◻</div><p>Aucune œuvre trouvée</p></div>`;
+    return;
+  }
+  grid.innerHTML = displayedArtworks.map((a, i) => {
+    const mastery = getMastery(a.id);
+    return `
+    <div class="artwork-card" style="animation-delay:${i * 0.05}s" onclick="openModal(${a.id})">
+      <div class="card-img-wrap">
+        <img src="${a.image}" alt="${a.nom}" loading="lazy" onerror="this.style.opacity='0.2'">
+        <div class="card-movement-badge">${a.mouvement}</div>
+      </div>
+      <div class="card-body">
+        <div class="card-title">${a.nom}</div>
+        <div class="card-author">${a.auteur}</div>
+        <div class="card-meta">
+          <span class="card-date">${a.date}</span>
+          <div class="stars">${starsHtml(mastery)}</div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════
+//  MODAL
+// ══════════════════════════════════════════
+function openModal(id) {
+  const a = ARTWORKS.find(x => x.id === id);
+  if (!a) return;
+  const mastery = getMastery(a.id);
+  document.getElementById('modal-img').src = a.image;
+  document.getElementById('modal-img').alt = a.nom;
+  document.getElementById('modal-movement').textContent = a.mouvement;
+  document.getElementById('modal-title').textContent = a.nom;
+  document.getElementById('modal-author').innerHTML = `<span>${a.auteur}</span> · ${a.date}`;
+  document.getElementById('modal-analyse').textContent = a.analyse;
+  document.getElementById('modal-stars').innerHTML = starsHtml(mastery, 'lg');
+  document.getElementById('modal-overlay').classList.add('visible');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal(e) {
+  if (e && e.target !== document.getElementById('modal-overlay') && !e.target.classList.contains('modal-close')) return;
+  document.getElementById('modal-overlay').classList.remove('visible');
+  document.body.style.overflow = '';
+}
+
+// ══════════════════════════════════════════
+//  FLASHCARDS
+// ══════════════════════════════════════════
+function initRevision() {
+  startRevision();
+}
+
+function startRevision() {
+  fcDeck = [...ARTWORKS].sort(() => Math.random() - 0.5);
+  fcIndex = 0;
+  fcFlipped = false;
+  fcSelectedScore = null;
+  document.getElementById('fc-main').style.display = '';
+  document.getElementById('fc-complete').style.display = 'none';
+  document.getElementById('fc-total').textContent = fcDeck.length;
+  renderFlashcard();
+}
+
+function renderFlashcard() {
+  if (fcIndex >= fcDeck.length) {
+    showComplete();
+    return;
+  }
+  const a = fcDeck[fcIndex];
+  document.getElementById('fc-current').textContent = fcIndex + 1;
+  document.getElementById('fc-img').src = a.image;
+  document.getElementById('fc-img').alt = a.nom;
+  document.getElementById('fc-back-movement').textContent = a.mouvement;
+  document.getElementById('fc-back-title').textContent = a.nom;
+  document.getElementById('fc-back-author').textContent = a.auteur;
+  document.getElementById('fc-back-date').textContent = a.date;
+  document.getElementById('fc-back-analyse').textContent = a.analyse;
+  // Reset flip
+  const card = document.getElementById('fc-card');
+  card.classList.remove('flipped');
+  fcFlipped = false;
+  // Reset score panel
+  document.getElementById('fc-score-panel').classList.remove('visible');
+  document.querySelectorAll('.score-btn').forEach(b => b.classList.remove('selected'));
+  document.getElementById('fc-validate-btn').disabled = true;
+  fcSelectedScore = null;
+}
+
+function flipCard() {
+  if (fcIndex >= fcDeck.length) return;
+  const card = document.getElementById('fc-card');
+  if (!fcFlipped) {
+    card.classList.add('flipped');
+    fcFlipped = true;
+    setTimeout(() => {
+      document.getElementById('fc-score-panel').classList.add('visible');
+    }, 400);
+  }
+}
+
+function selectScore(score) {
+  fcSelectedScore = score;
+  document.querySelectorAll('.score-btn').forEach((b, i) => {
+    b.classList.toggle('selected', i === score);
+  });
+  document.getElementById('fc-validate-btn').disabled = false;
+}
+
+function validateScore() {
+  if (fcSelectedScore === null) return;
+  const a = fcDeck[fcIndex];
+  saveScore(a.id, fcSelectedScore);
+  showToast(`Score enregistré : ${fcSelectedScore}/3`);
+  setTimeout(() => nextCard(), 400);
+}
+
+function nextCard() {
+  if (fcIndex < fcDeck.length - 1) {
+    fcIndex++;
+    renderFlashcard();
+  } else {
+    showComplete();
+  }
+}
+
+function prevCard() {
+  if (fcIndex > 0) {
+    fcIndex--;
+    renderFlashcard();
+  }
+}
+
+function showComplete() {
+  document.getElementById('fc-main').style.display = 'none';
+  document.getElementById('fc-complete').style.display = 'block';
+  const scores = getScores();
+  const reviewed = ARTWORKS.filter(a => scores[a.id] && scores[a.id].count > 0).length;
+  const avg = ARTWORKS.reduce((s, a) => s + getMastery(a.id), 0) / ARTWORKS.length;
+  document.getElementById('fc-complete-msg').innerHTML =
+    `Vous avez parcouru les ${fcDeck.length} œuvres de la collection.<br>Score moyen de maîtrise : <strong>${avg.toFixed(1)}/5 étoiles</strong>.`;
+}
+
+// ══════════════════════════════════════════
+//  STATS
+// ══════════════════════════════════════════
+function renderStats() {
+  const scores = getScores();
+  const reviewed = ARTWORKS.filter(a => scores[a.id] && scores[a.id].count > 0).length;
+  const avgMastery = ARTWORKS.reduce((s, a) => s + getMastery(a.id), 0) / ARTWORKS.length;
+  const totalSessions = Object.values(scores).reduce((s, v) => s + (v.count || 0), 0);
+
+  document.getElementById('stats-summary').innerHTML = `
+    <div class="stat-card" style="animation-delay:0s">
+      <div class="stat-number">${reviewed}</div>
+      <div class="stat-label">Œuvres révisées</div>
+    </div>
+    <div class="stat-card" style="animation-delay:0.08s">
+      <div class="stat-number">${avgMastery.toFixed(1)}</div>
+      <div class="stat-label">Score moyen /5</div>
+    </div>
+    <div class="stat-card" style="animation-delay:0.16s">
+      <div class="stat-number">${totalSessions}</div>
+      <div class="stat-label">Sessions totales</div>
+    </div>
+  `;
+
+  // Per artwork
+  const tbody = document.getElementById('stats-artworks');
+  tbody.innerHTML = ARTWORKS.map(a => {
+    const m = getMastery(a.id);
+    return `<tr>
+      <td>${a.nom}</td>
+      <td style="font-size:0.82rem;color:var(--text-tertiary);font-style:italic;">${a.auteur}</td>
+      <td style="font-size:0.72rem;color:var(--text-tertiary);letter-spacing:0.06em;">${a.mouvement}</td>
+      <td><div class="stars">${starsHtml(m)}</div></td>
+    </tr>`;
+  }).join('');
+
+  // Per movement
+  const movements = getMovements();
+  const mvBody = document.getElementById('stats-movements');
+  mvBody.innerHTML = movements.map(mv => {
+    const arts = ARTWORKS.filter(a => a.mouvement === mv);
+    const avg = arts.reduce((s, a) => s + getMastery(a.id), 0) / arts.length;
+    const pct = (avg / 5) * 100;
+    return `<tr>
+      <td>${mv}</td>
+      <td>
+        <div class="movement-bar-wrap">
+          <div class="movement-bar"><div class="movement-bar-fill" style="width:${pct}%"></div></div>
+        </div>
+      </td>
+      <td class="movement-score">${avg.toFixed(1)}/5</td>
+    </tr>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════
+//  TOAST
+// ══════════════════════════════════════════
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2400);
+}
+
+// ══════════════════════════════════════════
+//  KEYBOARD
+// ══════════════════════════════════════════
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal();
+  if (currentView === 'revision') {
+    if (e.key === ' ') { e.preventDefault(); flipCard(); }
+    if (e.key === 'ArrowRight') nextCard();
+    if (e.key === 'ArrowLeft') prevCard();
+    if (['0','1','2','3'].includes(e.key)) selectScore(parseInt(e.key));
+    if (e.key === 'Enter') validateScore();
+  }
+});
+
+// ══════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════
+renderCards();
+</script>
+</body>
+</html>
