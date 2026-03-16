@@ -165,7 +165,7 @@ const ARTWORKS = [
     id: 18,
     nom: "Le Radeau de la Méduse",
     auteur: "Théodore Géricault",
-    image: "https://upload.wikimedia.org/wikipedia/commons/1/15/JEAN_LOUIS_TH%C3%89ODORE_G%C3%89RICAULT_-_La_Balsa_de_la_Medusa_%28Museo_del_Louvre%2C_1818-19%29.jpg",
+    image: "https://upload.wikimedia.org/wikipedia/commons/6/66/G%C3%A9ricault_Raft_of_the_Medusa.jpg",
     mouvement: "Romantisme",
     date: "1819",
     analyse: "Inspiré du naufrage de la frégate Méduse en 1816 et du scandale politique qui s'ensuivit, ce tableau monumental met en scène les rescapés livrés à eux-mêmes sur un radeau de fortune. Géricault adopte une composition en vague montante vers la figure du survivant agitant un chiffon, alternant désespoir et espoir. La palette sombre et les corps enchevêtrés créent une violence dramatique sans précédent dans la peinture française. L'œuvre fut saluée comme le manifeste du Romantisme."
@@ -201,7 +201,7 @@ const ARTWORKS = [
     id: 22,
     nom: "L'École d'Athènes",
     auteur: "Raphaël",
-    image: "https://upload.wikimedia.org/wikipedia/commons/4/49/%22The_School_of_Athens%22_by_Raffaello_Sanzio_da_Urbino.jpg",
+    image: "https://upload.wikimedia.org/wikipedia/commons/4/49/Raphael_School_of_Athens.jpg",
     mouvement: "Renaissance",
     date: "1509–1511",
     analyse: "Fresque monumentale ornant la chambre de la Signature au Vatican, L'École d'Athènes réunit dans un même espace architectural idéal tous les grands philosophes de l'Antiquité. Platon et Aristote occupent le centre de la composition, encadrés par Socrate, Pythagore, Euclide et d'autres penseurs. Raphaël donne à certains d'entre eux les traits de ses contemporains, dont Michel-Ange en Héraclite et Léonard de Vinci en Platon. L'œuvre incarne l'idéal humaniste de la Renaissance : l'harmonie entre sagesse antique et culture chrétienne."
@@ -210,7 +210,7 @@ const ARTWORKS = [
     id: 23,
     nom: "Autoportrait au miroir",
     auteur: "Frida Kahlo",
-    image: "https://upload.wikimedia.org/wikipedia/en/1/1e/Frida_Kahlo_%28self_portrait%29.jpg",
+    image: "https://upload.wikimedia.org/wikipedia/en/a/a4/Frida_Kahlo_%28self_portrait%2C_1926%29.jpg",
     mouvement: "Surréalisme",
     date: "1937",
     analyse: "Frida Kahlo est l'une des artistes les plus intenses du XXe siècle, dont l'œuvre entière est traversée par l'autobiographie, la douleur physique et l'identité mexicaine. Ses autoportraits, qui constituent le cœur de sa production, mettent en scène son corps comme lieu de souffrance, de résistance et de fierté culturelle. Les éléments symboliques — animaux, plantes, accessoires traditionnels — forment un langage pictural unique entre réalisme et onirisme. André Breton la rattacha au Surréalisme, qualification qu'elle contesta, préférant parler de sa propre réalité."
