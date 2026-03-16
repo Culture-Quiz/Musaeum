@@ -72,7 +72,7 @@ const ARTWORKS = [
     id: 8,
     nom: "Le Cri",
     auteur: "Edvard Munch",
-    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/The_Scream_by_Edvard_Munch%2C_1893_-_Nasjonalmuseet_-_NG.M.00939.jpg/800px-The_Scream_by_Edvard_Munch%2C_1893_-_Nasjonalmuseet_-_NG.M.00939.jpg",
+    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Edvard_Munch%2C_1893%2C_The_Scream%2C_oil%2C_tempera_and_pastel_on_cardboard%2C_91_x_73_cm%2C_National_Gallery_of_Norway.jpg/640px-Edvard_Munch%2C_1893%2C_The_Scream%2C_oil%2C_tempera_and_pastel_on_cardboard%2C_91_x_73_cm%2C_National_Gallery_of_Norway.jpg",
     mouvement: "Expressionnisme",
     date: "1893",
     analyse: "Figure emblématique de l'art moderne, cette œuvre exprime l'angoisse existentielle à travers une déformation expressive radicale. Le personnage central, dont le visage s'est vidé de toute individualité, incarne la terreur et l'aliénation de l'homme moderne. Les courbes ondulatoires du paysage semblent résonner avec le cri intérieur muet. Munch s'inspirait d'une vraie expérience de dissociation vécue sur un pont de Christiania, décrite dans son journal."
