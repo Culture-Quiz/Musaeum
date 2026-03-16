@@ -90,7 +90,7 @@ const ARTWORKS = [
     id: 10,
     nom: "American Gothic",
     auteur: "Grant Wood",
-    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Grant_Wood_-_American_Gothic_-_Google_Art_Project.jpg/800px-Grant_Wood_-_American_Gothic_-_Google_Art_Project.jpg",
+    image: "https://upload.wikimedia.org/wikipedia/commons/c/cc/Grant_Wood_-_American_Gothic_-_Google_Art_Project.jpg",
     mouvement: "Réalisme",
     date: "1930",
     analyse: "Icône de la culture américaine, ce tableau représente un fermier et sa fille devant une maison de style gothique charpentier de l'Iowa. Wood s'inspire de la tradition flamande pour composer une image austère et ambivalente, oscillant entre fierté pionnière et solitude rurale. La fourche tenue par l'homme, les expressions figées et l'architecture rigide instaurent une tension latente. L'œuvre est devenue l'une des images les plus parodiées de l'histoire de l'art."
